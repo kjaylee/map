@@ -11,8 +11,22 @@ import SnapKit
 import MapKit
 import GoogleMapsTileOverlay
 import CoreLocation
+import OpenLocationCode
 
 class MapVC: UIViewController {
+    var userCoordinate: CLLocationCoordinate2D? {
+        didSet {
+            guard let coordinate = userCoordinate else {
+                return
+            }
+            if let plusCode = OpenLocationCode.encode(latitude: coordinate.latitude,
+                                                      longitude: coordinate.longitude,
+                                                      codeLength: 8) {
+                print("Open Location Code: \(plusCode)")
+                mapAddPolygon(area: OpenLocationCode.decode(plusCode))
+            }
+        }
+    }
     lazy var mapView: MKMapView = {
         let mapView = MKMapView()
         if let jsonURL = Bundle.main.url(forResource: "MapStyle", withExtension: "json"),
@@ -29,7 +43,6 @@ class MapVC: UIViewController {
         locationManager.delegate = self
         return locationManager
     }()
-
     override func viewDidLoad() {
         super.viewDidLoad()
         view.addSubview(mapView)
@@ -41,28 +54,47 @@ class MapVC: UIViewController {
 }
 
 extension MapVC: MKMapViewDelegate {
+    func mapAddPolygon(area: OpenLocationCodeArea?) {
+        guard let area = area else {
+            return
+        }
+        let coordinates = [
+            CLLocationCoordinate2DMake(area.latitudeLo, area.longitudeLo),
+            CLLocationCoordinate2DMake(area.latitudeHi, area.longitudeLo),
+            CLLocationCoordinate2DMake(area.latitudeHi, area.longitudeHi),
+            CLLocationCoordinate2DMake(area.latitudeLo, area.longitudeHi),
+        ]
+        mapView.addOverlay(MKPolygon(coordinates: coordinates, count: coordinates.count))
+    }
     func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
-        if let tileOverlay = overlay as? MKTileOverlay {
-            return MKTileOverlayRenderer(tileOverlay: tileOverlay)
+        if let overlay = overlay as? MKTileOverlay {
+            return MKTileOverlayRenderer(tileOverlay: overlay)
+        }
+        if let overlay = overlay as? MKPolygon {
+            let renderer = MKPolygonRenderer(polygon: overlay)
+            renderer.fillColor = UIColor.black.withAlphaComponent(0.1)
+            renderer.strokeColor = UIColor.orange
+            renderer.lineWidth = 0.5
+            return renderer
         }
         return MKOverlayRenderer(overlay: overlay)
     }
     func mapView(_ mapView: MKMapView, didUpdate userLocation: MKUserLocation) {
         let coordinate = self.mapView.userLocation.coordinate
+        self.userCoordinate = coordinate
         let distance: CLLocationDistance = 3000
         let pitch: CGFloat = 60
         let heading = 120.0
         let camera = MKMapCamera(lookingAtCenter: coordinate, fromDistance: distance, pitch: pitch, heading: heading)
-        UIView.animate(withDuration: 1.8, delay: 0, options: [.curveEaseIn, .allowUserInteraction]) {
-            self.mapView.setCamera(camera, animated: true)
-        } completion: { _ in
+        UIView.animate(withDuration: 1.8, delay: 0, options: [.curveEaseIn, .allowUserInteraction]) { [weak self] in
+            self?.mapView.setCamera(camera, animated: true)
+        } completion: { [weak self] _ in
             UIView.animate(withDuration: 0.8, delay: 0, options: [.curveEaseOut, .allowUserInteraction]) {
                 let heading = 0.0
                 let camera = MKMapCamera(lookingAtCenter: coordinate, fromDistance: distance, pitch: pitch, heading: heading)
-                self.mapView.setCamera(camera, animated: true)
+                self?.mapView.setCamera(camera, animated: true)
             }
         }
-
     }
 }
 
@@ -95,7 +127,7 @@ extension MapVC: CLLocationManagerDelegate {
         guard let firstLocation = locations.first else {
           return
         }
-        CLGeocoder().reverseGeocodeLocation(firstLocation) { list, error in
+        CLGeocoder().reverseGeocodeLocation(firstLocation) { [weak self] list, error in
             guard let firstMark = list?.first, let coordinate = firstMark.location?.coordinate else {
                 return
             }
@@ -104,7 +136,8 @@ extension MapVC: CLLocationManagerDelegate {
             let distance: CLLocationDistance = 3000
             let pitch: CGFloat = 60
             let camera = MKMapCamera(lookingAtCenter: coordinate, fromDistance: distance, pitch: pitch, heading: heading)
-            self.mapView.setCamera(camera, animated: true)
+            self?.mapView.setCamera(camera, animated: true)
+            self?.userCoordinate = coordinate
         }
     }
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {

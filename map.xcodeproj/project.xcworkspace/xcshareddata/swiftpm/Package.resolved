@@ -10,6 +10,15 @@
       }
     },
     {
+      "identity" : "open-location-code-swift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/google/open-location-code-swift",
+      "state" : {
+        "revision" : "2e16b0d81c661ea432ce75d3ec7fe7d39f3387e3",
+        "version" : "3.0.0"
+      }
+    },
+    {
       "identity" : "snapkit",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/SnapKit/SnapKit.git",

@@ -18,6 +18,7 @@
 		D7B1BFD32840B9D300F02DBE /* GoogleMapsTileOverlay in Frameworks */ = {isa = PBXBuildFile; productRef = D7B1BFD22840B9D300F02DBE /* GoogleMapsTileOverlay */; };
 		D7B1BFD52840BA5700F02DBE /* MapVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7B1BFD42840BA5700F02DBE /* MapVC.swift */; };
 		D7B1BFD82840BAFF00F02DBE /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = D7B1BFD72840BAFF00F02DBE /* SnapKit */; };
+		D7B1BFDB2844AF5900F02DBE /* OpenLocationCode in Frameworks */ = {isa = PBXBuildFile; productRef = D7B1BFDA2844AF5900F02DBE /* OpenLocationCode */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -59,6 +60,7 @@
 			files = (
 				D7B1BFD32840B9D300F02DBE /* GoogleMapsTileOverlay in Frameworks */,
 				D7B1BFD82840BAFF00F02DBE /* SnapKit in Frameworks */,
+				D7B1BFDB2844AF5900F02DBE /* OpenLocationCode in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -156,6 +158,7 @@
 			packageProductDependencies = (
 				D7B1BFD22840B9D300F02DBE /* GoogleMapsTileOverlay */,
 				D7B1BFD72840BAFF00F02DBE /* SnapKit */,
+				D7B1BFDA2844AF5900F02DBE /* OpenLocationCode */,
 			);
 			productName = map;
 			productReference = D7B1BFA22840B8A900F02DBE /* map.app */;
@@ -232,6 +235,7 @@
 			packageReferences = (
 				D7B1BFD12840B9D300F02DBE /* XCRemoteSwiftPackageReference "GoogleMapsTileOverlay" */,
 				D7B1BFD62840BAFF00F02DBE /* XCRemoteSwiftPackageReference "SnapKit" */,
+				D7B1BFD92844AF5900F02DBE /* XCRemoteSwiftPackageReference "open-location-code-swift" */,
 			);
 			productRefGroup = D7B1BFA32840B8A900F02DBE /* Products */;
 			projectDirPath = "";
@@ -627,6 +631,14 @@
 				minimumVersion = 5.0.0;
 			};
 		};
+		D7B1BFD92844AF5900F02DBE /* XCRemoteSwiftPackageReference "open-location-code-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/google/open-location-code-swift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.0.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -639,6 +651,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = D7B1BFD62840BAFF00F02DBE /* XCRemoteSwiftPackageReference "SnapKit" */;
 			productName = SnapKit;
+		};
+		D7B1BFDA2844AF5900F02DBE /* OpenLocationCode */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D7B1BFD92844AF5900F02DBE /* XCRemoteSwiftPackageReference "open-location-code-swift" */;
+			productName = OpenLocationCode;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
