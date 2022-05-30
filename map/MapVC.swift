@@ -14,6 +14,7 @@ import CoreLocation
 import OpenLocationCode
 
 class MapVC: UIViewController {
+    private var didDrawCoordinates = [CLLocationCoordinate2D]()
     var userCoordinate: CLLocationCoordinate2D? {
         didSet {
             guard let coordinate = userCoordinate else {
@@ -55,9 +56,14 @@ class MapVC: UIViewController {
 
 extension MapVC: MKMapViewDelegate {
     func mapAddPolygon(area: OpenLocationCodeArea?) {
-        guard let area = area else {
+        guard let area = area,
+              (didDrawCoordinates.first { coordinate in
+                  return coordinate.latitude == area.latitudeCenter
+                  && coordinate.longitude == area.longitudeCenter
+              } == nil) else {
             return
         }
+        didDrawCoordinates.append(CLLocationCoordinate2D(latitude: area.latitudeCenter, longitude: area.longitudeCenter))
         let coordinates = [
             CLLocationCoordinate2DMake(area.latitudeLo, area.longitudeLo),
             CLLocationCoordinate2DMake(area.latitudeHi, area.longitudeLo),
