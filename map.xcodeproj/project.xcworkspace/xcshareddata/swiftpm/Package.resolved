@@ -1,0 +1,23 @@
+{
+  "pins" : [
+    {
+      "identity" : "googlemapstileoverlay",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/thepeaklab/GoogleMapsTileOverlay",
+      "state" : {
+        "revision" : "a31bd418be8e49b7b118d93f1e79b3a91407e82a",
+        "version" : "0.5.0"
+      }
+    },
+    {
+      "identity" : "snapkit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/SnapKit/SnapKit.git",
+      "state" : {
+        "revision" : "f222cbdf325885926566172f6f5f06af95473158",
+        "version" : "5.6.0"
+      }
+    }
+  ],
+  "version" : 2
+}
